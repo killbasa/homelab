@@ -1,0 +1,22 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/settings
+
+title: Homepage
+theme: dark
+color: slate
+headerStyle: boxed
+hideVersion: true
+statusStyle: "dot"
+disableCollapse: true
+useEqualHeights: true
+layout:
+  Services:
+    style: row
+    columns: 4
+  Network management:
+    style: row
+    columns: 4
+  Monitoring:
+    style: row
+    columns: 4

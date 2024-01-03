@@ -1,0 +1,103 @@
+version: "3.9"
+
+services:
+  grafana:
+    image: grafana/grafana-oss:10.2.3
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - ./configs/grafana.ini:/etc/grafana/grafana.ini
+      - ./configs/grafana.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - grafana_storage:/var/lib/grafana
+    ports:
+      - 3000:3000
+    depends_on:
+      - agent
+      - prometheus
+      - loki
+      - tempo
+    labels:
+      - homepage.group=Monitoring
+      - homepage.name=Grafana
+      - homepage.icon=grafana.png
+      - homepage.href=http://localhost:3000/
+
+  prometheus:
+    image: prom/prometheus:v2.48.1
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_storage:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/etc/prometheus/console_libraries
+      - --web.console.templates=/etc/prometheus/consoles
+      - --web.enable-lifecycle
+      - --web.enable-remote-write-receiver
+    labels:
+      - homepage.group=Monitoring
+      - homepage.name=Prometheus
+      - homepage.icon=prometheus.png
+
+  loki:
+    image: grafana/loki:2.9.3
+    container_name: loki
+    restart: unless-stopped
+    volumes:
+      - ./configs/loki.yml:/etc/loki/loki-config.yml
+    command:
+      - --config.file=/etc/loki/loki-config.yml
+    labels:
+      - homepage.group=Monitoring
+      - homepage.name=Loki
+      - homepage.icon=loki.png
+
+  tempo:
+    image: grafana/tempo:2.3.1
+    container_name: tempo
+    restart: unless-stopped
+    volumes:
+      - ./configs/tempo.yml:/etc/tempo/tempo.yml
+      - tempo_storage:/tmp/tempo
+    command:
+      - --config.file=/etc/tempo/tempo.yml
+    labels:
+      - homepage.group=Monitoring
+      - homepage.name=Tempo
+      - homepage.icon=/icons/tempo.png
+
+  agent:
+    image: grafana/agent:v0.38.1
+    container_name: agent
+    restart: unless-stopped
+    volumes:
+      - ./configs/agent.yml:/etc/agent-config/agent.yml
+      - /tmp/agent:/etc/agent
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    entrypoint:
+      - /bin/grafana-agent
+      - -config.file=/etc/agent-config/agent.yml
+      - -enable-features=integrations-next
+      - -config.expand-env
+      - -config.enable-read-api
+    environment:
+      PROMETHEUS_HOST: prometheus:9090
+      LOKI_HOST: loki:3100
+      TEMPO_HOST: tempo:4317
+    ports:
+      - 4317:4317
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+    labels:
+      - homepage.group=Monitoring
+      - homepage.name=Agent
+      - homepage.icon=/icons/agent.png
+
+volumes:
+  grafana_storage: {}
+  prometheus_storage: {}
+  tempo_storage: {}

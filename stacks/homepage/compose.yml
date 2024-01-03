@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v0.8.4
+    container_name: homepage
+    restart: unless-stopped
+    environment:
+      INIT_ASSETS: 1
+    volumes:
+      - ./config:/app/config
+      - ./icons:/app/public/icons
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 4000:3000

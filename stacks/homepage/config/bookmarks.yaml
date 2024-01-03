@@ -1,0 +1,30 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/bookmarks
+
+- Development:
+    - GitHub:
+        - href: https://github.com/
+          icon: github.png
+    - GitLab:
+        - href: https://gitlab.com/
+          icon: gitlab.png
+    - Sentry:
+        - href: https://sentry.io/
+          icon: sentry.png
+
+- Cloud:
+    - Hetzner Cloud:
+        - href: https://console.hetzner.cloud/projects
+          icon: hetzner.png
+
+- Documentation:
+    - Docker:
+        - href: https://docs.docker.com/
+          icon: docker.png
+    - Kubernetes:
+        - href: https://kubernetes.io/docs/home/
+          icon: kubernetes.png
+    - Homepage:
+        - href: https://gethomepage.dev/v0.8.4/
+          icon: homepage.png

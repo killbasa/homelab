@@ -1,0 +1,10 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/services
+
+- Network management:
+    - Dockge:
+        href: http://localhost:5001/
+        description: Docker compose management
+        icon: /icons/dockge.svg
+        container: dockge
